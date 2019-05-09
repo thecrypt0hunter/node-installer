@@ -19,7 +19,7 @@ while getopts c: option
 do
 case "${option}"
 in
-f) FORK=${OPTARG};;
+c) FORK=${OPTARG};;
 esac
 done
 
