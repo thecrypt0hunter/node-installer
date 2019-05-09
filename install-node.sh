@@ -11,6 +11,6 @@ COINSERVICECONFIG="https://raw.githubusercontent.com/thecrypt0hunter/node-instal
 # Install Coins Service
 wget ${COINSERVICEINSTALLER} -O /tmp/install-coin.sh
 wget ${COINSERVICECONFIG} -O /tmp/config-${coin}.sh
-chmod +x /tmp/install-${coin}.sh
+chmod +x /tmp/install-coin.sh
 /tmp/install-coin.sh -c ${coin}
 
