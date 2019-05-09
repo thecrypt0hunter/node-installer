@@ -17,7 +17,7 @@ c) FORK=${OPTARG};;
 esac
 done
 
-source config-${FORK}.sh
+source /tmp/config-${FORK}.sh
 
 OS_VER="Ubuntu*"
 ARCH="linux-x64"
