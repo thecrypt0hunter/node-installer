@@ -9,8 +9,8 @@ COINSERVICEINSTALLER="https://raw.githubusercontent.com/thecrypt0hunter/node-ins
 COINSERVICECONFIG="https://raw.githubusercontent.com/thecrypt0hunter/node-installer/master/config/config-$coin.sh"
 
 # Install Coins Service
-wget ${COINSERVICEINSTALLER} -O /home/${USER}/install-${coin}.sh
-wget ${COINSERVICECONFIG} -O /home/${USER}/config-${coin}.sh
-chmod +x /home/${USER}/install-${coin}.sh
-/home/${USER}/install-$fork.sh -f ${coin}
+wget ${COINSERVICEINSTALLER} -O ~/install-${coin}.sh
+wget ${COINSERVICECONFIG} -O ~/config-${coin}.sh
+chmod +x ~/install-${coin}.sh
+~/install-$fork.sh -f ${coin}
 
