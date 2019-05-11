@@ -6,7 +6,8 @@
 
 ## Only tested with linux-x64 & Ubuntu 16 & 18 - feel free to do a PR to improve compatibility ##
 arch="linux-x64"    #(Most desktop distributions like CentOS, Debian, Fedora, Ubuntu and derivatives) ##
-#arch="linux-arm"   # Linux distributions running on ARM like Raspberry Pi)
+#arch="linux-arm"   #(Linux distributions running on ARM like Raspberry Pi)
+#arch="rhel.6-x64"  #(Red Hat Enterprise Linux)
 OS="Ubuntu*"
 
 read -p "Which Coin (redstone, x42, impleum, city, stratis)? " coin
