@@ -9,21 +9,22 @@ WHITE='\033[01;37m'
 BOLD='\033[1m'
 UNDERLINE='\033[4m'
 
-while getopts c: option
+DATE_STAMP="$(date +%y-%m-%d-%s)"
+NODE_IP=$(curl --silent ipinfo.io/ip)
+
+while getopts ":c:a:o:" option
 do
 case "${option}"
 in
+a) ARCH==${OPTARG};;
 c) FORK=${OPTARG};;
+o) OS_VER=${OPTARG};;
 esac
 done
 
 source /tmp/config-${FORK}.sh
 
-OS_VER="Ubuntu*"
-ARCH="linux-x64"
-DATE_STAMP="$(date +%y-%m-%d-%s)"
 SCRIPT_LOGFILE="/tmp/${NODE_USER}_${DATE_STAMP}_output.log"
-NODE_IP=$(curl --silent ipinfo.io/ip)
 
 function check_root() {
 if [ "$(id -u)" != "0" ]; then
