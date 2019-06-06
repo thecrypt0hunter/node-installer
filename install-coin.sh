@@ -12,13 +12,17 @@ UNDERLINE='\033[4m'
 DATE_STAMP="$(date +%y-%m-%d-%s)"
 NODE_IP=$(curl --silent ipinfo.io/ip)
 
-while getopts ":c:a:o:" option
+## Only tested with linux-x64 & Ubuntu 16 & 18 - feel free to do a PR to improve compatibility ##
+ARCH="linux-x64"    #(Most desktop distributions like CentOS, Debian, Fedora, Ubuntu and derivatives) ##
+#ARCH="linux-arm"   #(Linux distributions running on ARM like Raspberry Pi)
+#ARCH="rhel.6-x64"  #(Red Hat Enterprise Linux)
+OS_VER="Ubuntu*"
+
+while getopts ":c:" option
 do
 case "${option}"
 in
-a) ARCH==${OPTARG};;
 c) FORK=${OPTARG};;
-o) OS_VER=${OPTARG};;
 esac
 done
 
