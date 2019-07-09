@@ -132,7 +132,7 @@ installDependencies() {
     echo
     echo -e "* Installing dependencies. Please wait..."
     sudo timedatectl set-ntp no &>> ${SCRIPT_LOGFILE}
-    sudo apt-get install git ntp nano wget curl software-properties-common -y &>> ${SCRIPT_LOGFILE}
+    sudo apt-get install git ntp nano wget curl make gcc software-properties-common -y &>> ${SCRIPT_LOGFILE}
     if [[ -r /etc/os-release ]]; then
         . /etc/os-release
         if [[ "${VERSION_ID}" = "16.04" ]]; then
@@ -158,6 +158,30 @@ installDependencies() {
             sudo apt-get install apt-transport-https -y &>> ${SCRIPT_LOGFILE}
             sudo apt-get update -y &>> ${SCRIPT_LOGFILE}
             sudo apt-get install dotnet-sdk-2.2 -y &>> ${SCRIPT_LOGFILE}
+            
+cd /opt
+wget https://www.openssl.org/source/openssl-1.0.2s.tar.gz 
+mkdir /opt/openssl
+tar xfvz /opt/openssl-1.0.2s.tar.gz --directory /opt/openssl
+rm /opt/openssl-1.0.2s.tar.gz
+export LD_LIBRARY_PATH=/opt/openssl/lib
+cd /opt/openssl/openssl-1.0.2s/
+./config --prefix=/opt/openssl --openssldir=/opt/openssl/ssl
+make install
+updatedb
+
+#            cd /opt
+#            wget https://www.openssl.org/source/openssl-1.1.1c.tar.gz
+#            mkdir /opt/openssl
+#            tar xfvz /opt/openssl-1.1.1c.tar.gz --directory /opt/openssl
+#            export LD_LIBRARY_PATH=/opt/openssl/lib
+#            cd /opt/openssl/openssl-1.1.1c
+#            ./config --prefix=/opt/openssl --openssldir=/opt/openssl/ssl
+#            make install
+#           updatedb
+#           locate openssl | grep /opt/openssl/bin
+
+
             echo -e "${NONE}${GREEN}* Done${NONE}";
         fi
         else
