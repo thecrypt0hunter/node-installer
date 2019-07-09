@@ -158,30 +158,8 @@ installDependencies() {
             sudo apt-get install apt-transport-https -y &>> ${SCRIPT_LOGFILE}
             sudo apt-get update -y &>> ${SCRIPT_LOGFILE}
             sudo apt-get install dotnet-sdk-2.2 -y &>> ${SCRIPT_LOGFILE}
-            
-cd /opt
-wget https://www.openssl.org/source/openssl-1.0.2s.tar.gz 
-mkdir /opt/openssl
-tar xfvz /opt/openssl-1.0.2s.tar.gz --directory /opt/openssl
-rm /opt/openssl-1.0.2s.tar.gz
-export LD_LIBRARY_PATH=/opt/openssl/lib
-cd /opt/openssl/openssl-1.0.2s/
-./config --prefix=/opt/openssl --openssldir=/opt/openssl/ssl
-make install
-updatedb
-
-#            cd /opt
-#            wget https://www.openssl.org/source/openssl-1.1.1c.tar.gz
-#            mkdir /opt/openssl
-#            tar xfvz /opt/openssl-1.1.1c.tar.gz --directory /opt/openssl
-#            export LD_LIBRARY_PATH=/opt/openssl/lib
-#            cd /opt/openssl/openssl-1.1.1c
-#            ./config --prefix=/opt/openssl --openssldir=/opt/openssl/ssl
-#            make install
-#           updatedb
-#           locate openssl | grep /opt/openssl/bin
-
-
+            wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu6_amd64.deb &>> ${SCRIPT_LOGFILE}
+            sudo dpkg -i libssl1.0.0_1.0.2n-1ubuntu6_amd64.deb &>> ${SCRIPT_LOGFILE}
             echo -e "${NONE}${GREEN}* Done${NONE}";
         fi
         else
