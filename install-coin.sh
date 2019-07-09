@@ -136,7 +136,7 @@ installDependencies() {
     if [[ -r /etc/os-release ]]; then
         . /etc/os-release
         if [[ "${VERSION_ID}" = "16.04" ]]; then
-            wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
+            wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
             sudo dpkg -i packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
             sudo apt-get install apt-transport-https -y &>> ${SCRIPT_LOGFILE}
             sudo apt-get update -y &>> ${SCRIPT_LOGFILE}
@@ -144,9 +144,17 @@ installDependencies() {
             echo -e "${NONE}${GREEN}* Done${NONE}";
         fi
         if [[ "${VERSION_ID}" = "18.04" ]]; then
-            wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
+            wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
             sudo dpkg -i packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
             sudo add-apt-repository universe -y &>> ${SCRIPT_LOGFILE}
+            sudo apt-get install apt-transport-https -y &>> ${SCRIPT_LOGFILE}
+            sudo apt-get update -y &>> ${SCRIPT_LOGFILE}
+            sudo apt-get install dotnet-sdk-2.2 -y &>> ${SCRIPT_LOGFILE}
+            echo -e "${NONE}${GREEN}* Done${NONE}";
+        fi
+        if [[ "${VERSION_ID}" = "19.04" ]]; then
+            wget -q https://packages.microsoft.com/config/ubuntu/19.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
+            sudo dpkg -i packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
             sudo apt-get install apt-transport-https -y &>> ${SCRIPT_LOGFILE}
             sudo apt-get update -y &>> ${SCRIPT_LOGFILE}
             sudo apt-get install dotnet-sdk-2.2 -y &>> ${SCRIPT_LOGFILE}
