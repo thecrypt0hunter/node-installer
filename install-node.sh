@@ -3,8 +3,13 @@
 #bash <( curl -s https://raw.githubusercontent.com/thecrypt0hunter/node-installer/master/install-node.sh )
 # =====================================================
 
+read -p "Which Coin (redstone, x42, impleum, city, stratis, obsidian)? " coin
+read -p "Mainnet (m) or Testnet (t) or Upgrade (u)? " net
+read -p "Which branch (default=master)? " branch
 
-read -p "Which Coin (redstone, x42, impleum, city, stratis)? " coin
+if [${BRANCH} = ""]; then 
+branch="master";
+fi
 
 COINSERVICEINSTALLER="https://raw.githubusercontent.com/thecrypt0hunter/node-installer/master/install-coin.sh"
 COINSERVICECONFIG="https://raw.githubusercontent.com/thecrypt0hunter/node-installer/master/config/config-${coin}.sh"
@@ -13,5 +18,5 @@ COINSERVICECONFIG="https://raw.githubusercontent.com/thecrypt0hunter/node-instal
 wget ${COINSERVICEINSTALLER} -O /tmp/install-coin.sh
 wget ${COINSERVICECONFIG} -O /tmp/config-${coin}.sh
 chmod +x /tmp/install-coin.sh
-/tmp/install-coin.sh -c ${coin}
-
+cd ~
+/tmp/install-coin.sh -f ${coin} -n ${net} -b ${branch}

@@ -18,15 +18,25 @@ ARCH="linux-x64"    #(Most desktop distributions like CentOS, Debian, Fedora, Ub
 #ARCH="rhel.6-x64"  #(Red Hat Enterprise Linux)
 OS_VER="Ubuntu*"
 
-while getopts ":c:" option
-do
-case "${option}"
-in
-c) FORK=${OPTARG};;
-esac
+usage() { echo "Usage: $0 [-f coin name] [-u rpc username] [-p rpc password] [-n (m/t/u) main, test or upgrade] [-b github branch/tags]" 1>&2; exit 1; }
+
+while getopts ":f:u:p:n:b:" option; do
+    case "${option}" in
+        f) FORK=${OPTARG};;
+        u) RPCUSER=${OPTARG};;
+        p) RPCPASS=${OPTARG};;
+        n) NET=${OPTARG};;
+        b) BRANCH=${OPTARG};;
+        *) usage ;;
+    esac
 done
+shift "$((OPTIND-1))"
 
 source /tmp/config-${FORK}.sh
+
+if [${BRANCH} = ""]; then 
+BRANCH="master";
+fi
 
 SCRIPT_LOGFILE="/tmp/${NODE_USER}_${DATE_STAMP}_output.log"
 
@@ -58,7 +68,7 @@ function set_permissions() {
     chmod -R g=u ${COINCORE} ${COINSTARTUP} ${COINDLOC} ${COINSERVICELOC} &>> ${SCRIPT_LOGFILE}
 }
 
-checkOSVersion() {
+function checkOSVersion() {
    echo
    echo "* Checking OS version..."
     if [[ `cat /etc/issue.net`  == ${OS_VER} ]]; then
@@ -70,7 +80,7 @@ checkOSVersion() {
     fi
 }
 
-updateAndUpgrade() {
+function updateAndUpgrade() {
     echo
     echo "* Running update and upgrade. Please wait..."
     sudo DEBIAN_FRONTEND=noninteractive apt-get update -qq -y &>> ${SCRIPT_LOGFILE}
@@ -79,19 +89,19 @@ updateAndUpgrade() {
     echo -e "${GREEN}* Done${NONE}";
 }
 
-setupSwap() {
+function setupSwap() {
 #check if swap is available
     echo
     echo "* Creating Swap File. Please wait..."
-    if [ $(free | awk '/^Swap:/ {exit !$2}') ] || [ ! -f "/var/mnode_swap.img" ];then
+    if [ $(free | awk '/^Swap:/ {exit !$2}') ] || [ ! -f "/var/node_swap.img" ];then
     echo -e "${GREEN}* No proper swap, creating it.${NONE}";
     # needed because ant servers are ants
-    sudo rm -f /var/mnode_swap.img &>> ${SCRIPT_LOGFILE}
-    sudo dd if=/dev/zero of=/var/mnode_swap.img bs=1024k count=${SWAPSIZE} &>> ${SCRIPT_LOGFILE}
-    sudo chmod 0600 /var/mnode_swap.img &>> ${SCRIPT_LOGFILE}
-    sudo mkswap /var/mnode_swap.img &>> ${SCRIPT_LOGFILE}
-    sudo swapon /var/mnode_swap.img &>> ${SCRIPT_LOGFILE}
-    echo '/var/mnode_swap.img none swap sw 0 0' | sudo tee -a /etc/fstab &>> ${SCRIPT_LOGFILE}
+    sudo rm -f /var/node_swap.img &>> ${SCRIPT_LOGFILE}
+    sudo dd if=/dev/zero of=/var/node_swap.img bs=1024k count=${SWAPSIZE} &>> ${SCRIPT_LOGFILE}
+    sudo chmod 0600 /var/node_swap.img &>> ${SCRIPT_LOGFILE}
+    sudo mkswap /var/node_swap.img &>> ${SCRIPT_LOGFILE}
+    sudo swapon /var/node_swap.img &>> ${SCRIPT_LOGFILE}
+    echo '/var/node_swap.img none swap sw 0 0' | sudo tee -a /etc/fstab &>> ${SCRIPT_LOGFILE}
     echo 'vm.swappiness=10' | sudo tee -a /etc/sysctl.conf &>> ${SCRIPT_LOGFILE}
     echo 'vm.vfs_cache_pressure=50' | sudo tee -a /etc/sysctl.conf &>> ${SCRIPT_LOGFILE}
 else
@@ -99,7 +109,7 @@ else
 fi
 }
 
-installFail2Ban() {
+function installFail2Ban() {
     echo
     echo -e "* Installing fail2ban. Please wait..."
     sudo apt-get -y install fail2ban &>> ${SCRIPT_LOGFILE}
@@ -113,7 +123,7 @@ installFail2Ban() {
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }
 
-installFirewall() {
+function installFirewall() {
     echo
     echo -e "* Installing UFW. Please wait..."
     sudo apt-get -y install ufw &>> ${SCRIPT_LOGFILE}
@@ -128,7 +138,7 @@ installFirewall() {
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }
 
-installDependencies() {
+function installDependencies() {
     echo
     echo -e "* Installing dependencies. Please wait..."
     sudo timedatectl set-ntp no &>> ${SCRIPT_LOGFILE}
@@ -136,7 +146,7 @@ installDependencies() {
     if [[ -r /etc/os-release ]]; then
         . /etc/os-release
         if [[ "${VERSION_ID}" = "16.04" ]]; then
-            wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
+            wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
             sudo dpkg -i packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
             sudo apt-get install apt-transport-https -y &>> ${SCRIPT_LOGFILE}
             sudo apt-get update -y &>> ${SCRIPT_LOGFILE}
@@ -144,7 +154,7 @@ installDependencies() {
             echo -e "${NONE}${GREEN}* Done${NONE}";
         fi
         if [[ "${VERSION_ID}" = "18.04" ]]; then
-            wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
+            wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
             sudo dpkg -i packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
             sudo add-apt-repository universe -y &>> ${SCRIPT_LOGFILE}
             sudo apt-get install apt-transport-https -y &>> ${SCRIPT_LOGFILE}
@@ -167,24 +177,24 @@ installDependencies() {
     fi
 }
 
-compileWallet() {
+function compileWallet() {
     echo
     echo -e "* Compiling wallet. Please wait, this might take a while to complete..."
     cd /home/${NODE_USER}/
-    git clone --recurse-submodules ${COINGITHUB} code &>> ${SCRIPT_LOGFILE}
+    git clone --recurse-submodules --branch=${BRANCH} ${COINGITHUB} code &>> ${SCRIPT_LOGFILE}
     cd /home/${NODE_USER}/code
     git submodule update --init --recursive &>> ${SCRIPT_LOGFILE}
     cd ${COINDSRC}
-    dotnet publish -c ${CONF} -r ${ARCH} -v m -o ${COINDLOC} &>> ${SCRIPT_LOGFILE}	   ### compile & publish code
-    rm -rf /home/${NODE_USER}/code &>> ${SCRIPT_LOGFILE} 	   ### Remove source
+    dotnet publish -c ${CONF} -r ${ARCH} -v m -o ${COINDLOC} &>> ${SCRIPT_LOGFILE} ### compile & publish code
+    rm -rf /home/${NODE_USER}/code &>> ${SCRIPT_LOGFILE} 	                       ### Remove source
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }
 
-installWallet() {
+function installWallet() {
     echo
     echo -e "* Installing wallet. Please wait..."
     cd /home/${NODE_USER}/
-    echo -e "#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\ncd $COINDLOC\n$COINRUNCMD" > ${COINSTARTUP}
+    echo -e "#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nfi\ncd $COINDLOC\n$COINRUNCMD" > ${COINSTARTUP}
     echo -e "[Unit]\nDescription=${COINDAEMON}\nAfter=network-online.target\n\n[Service]\nType=simple\nUser=${NODE_USER}\nGroup=${NODE_USER}\nExecStart=${COINSTARTUP}\nRestart=always\nRestartSec=5\nPrivateTmp=true\nTimeoutStopSec=60s\nTimeoutStartSec=5s\nStartLimitInterval=120s\nStartLimitBurst=15\n\n[Install]\nWantedBy=multi-user.target" >${COINSERVICENAME}.service
     chown -R ${NODE_USER}:${NODE_USER} ${COINSERVICELOC} &>> ${SCRIPT_LOGFILE}
     sudo mv $COINSERVICENAME.service ${COINSERVICELOC} &>> ${SCRIPT_LOGFILE}
@@ -194,26 +204,24 @@ installWallet() {
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }
 
-configureWallet() {
+function configureWallet() {
     echo
     echo -e "* Configuring wallet. Please wait..."
     cd /home/${NODE_USER}/
-    rpcuser=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
-    rpcpass=`cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
-    sudo mkdir -p $COINCORE
+    [ ! -d ${COINCORE} ] && mkdir -p ${COINCORE}
     echo -e "externalip=${NODE_IP}\ntxindex=1\nlisten=1\ndaemon=1\nmaxconnections=64" > $COINCONFIG
     sudo mv $COINCONFIG $COINCORE
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }
 
-startWallet() {
+function startWallet() {
     echo
     echo -e "* Starting wallet daemon...${COINSERVICENAME}"
     sudo service ${COINSERVICENAME} start &>> ${SCRIPT_LOGFILE}
     sleep 2
     echo -e "${GREEN}* Done${NONE}";
 }
-stopWallet() {
+function stopWallet() {
     echo
     echo -e "* Stopping wallet daemon...${COINSERVICENAME}"
     sudo service ${COINSERVICENAME} stop &>> ${SCRIPT_LOGFILE}
@@ -235,7 +243,7 @@ function installUnattendedUpgrades() {
     echo -e "${GREEN}* Done${NONE}";
 }
 
-displayServiceStatus() {
+function displayServiceStatus() {
 	echo
 	echo
 	on="${GREEN}ACTIVE${NONE}"
@@ -255,9 +263,8 @@ echo -e "${BOLD}"
     check_root
 
 echo -e "${BOLD}"
-read -p " Do you want to setup on Mainnet (m), Testnet (t) or upgrade (u) your ${FORK} full node. (m/t/u)?" response
 
-if [[ "$response" =~ ^([mM])+$ ]]; then
+if [[ "$NET" =~ ^([mM])+$ ]]; then
     setMainVars
     setGeneralVars
     echo -e "${BOLD} The log file can be monitored here: ${SCRIPT_LOGFILE}${NONE}"
@@ -282,7 +289,7 @@ echo -e "${GREEN} Installation complete. Check service with: journalctl -f -u ${
 echo -e "${GREEN} thecrypt0hunter(2019)${NONE}"
 
  else
-    if [[ "$response" =~ ^([tT])+$ ]]; then
+    if [[ "$NET" =~ ^([tT])+$ ]]; then
         setTestVars
         setGeneralVars
         echo -e "${BOLD} The log file can be monitored here: ${SCRIPT_LOGFILE}${NONE}"
@@ -306,9 +313,11 @@ echo
 echo -e "${GREEN} Installation complete. Check service with: journalctl -f -u ${COINSERVICENAME} ${NONE}"
 echo -e "${GREEN} thecrypt0hunter(2019)${NONE}"
  else
-    if [[ "$response" =~ ^([uU])+$ ]]; then
+    if [[ "$NET" =~ ^([uU])+$ ]]; then
         check_root
         ##TODO: Test for servicefile and only upgrade as required 
+        ##TODO: Setup for testnet - test if file exists
+        ##[ ! -f ${COINSERVICELOC}$COINSERVICENAME.service ] << Test for service file
         #Stop Test Service
         setTestVars
         setGeneralVars
@@ -334,4 +343,4 @@ echo -e "${GREEN} thecrypt0hunter(2019)${NONE}"
     fi
   fi
 fi
-    cd ~
+cd ~

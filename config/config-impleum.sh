@@ -2,7 +2,7 @@ function setMainVars() {
 ## set network dependent variables
 NETWORK=""
 NODE_USER=${FORK}${NETWORK}
-COINCORE=home/${NODE_USER}/.${FORK}node/${FORK}/ImpleumMain
+COINCORE=/home/${NODE_USER}/.${FORK}node/${FORK}/ImpleumMain
 COINPORT=16271
 COINRPCPORT=16172
 COINAPIPORT=38222
@@ -12,7 +12,7 @@ function setTestVars() {
 ## set network dependent variables
 NETWORK="-testnet"
 NODE_USER=${FORK}${NETWORK}
-COINCORE=home/${NODE_USER}/.${FORK}node/${FORK}/ImpleumTest
+COINCORE=/home/${NODE_USER}/.${FORK}node/${FORK}/ImpleumTest
 COINPORT=16271
 COINRPCPORT=16272
 COINAPIPORT=39222
@@ -20,7 +20,7 @@ COINAPIPORT=39222
 
 function setGeneralVars() {
 ## set general variables
-COINRUNCMD="sudo dotnet ./impleum.impleumFullNodeD.dll ${NETWORK} -datadir=/home/${NODE_USER}/.${FORK}node #-stake=1 -walletname= -walletpassword="
+COINRUNCMD="sudo dotnet ./impleum.impleumFullNodeD.dll ${NETWORK} -datadir=/home/${NODE_USER}/.${FORK}node #-stake -walletname=\${STAKINGNAME} -walletpassword=\${STAKINGPASSWORD}"
 COINDSRC=/home/${NODE_USER}/code/src/Impleum.ImpleumD
 COINGITHUB=https://github.com/impleum/ImpleumBitcoinFullNode.git
 CONF=release
