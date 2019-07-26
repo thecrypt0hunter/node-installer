@@ -1,4 +1,4 @@
-Best using a freshly installed Unbuntu OS (16.04 - 19.04). 
+Best using a freshly installed Ubuntu OS (16.04 - 19.04). 
 
 Run the following command as root `sudo su`:
 
