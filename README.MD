@@ -1,3 +1,5 @@
-To run:
+Best using a freshly installed Unbuntu OS (16.04 - 19.04). 
 
-bash <( curl -s https://raw.githubusercontent.com/thecrypt0hunter/node-installer/master/install-node.sh )
+Run the following command as root `sudo su`:
+
+`bash <( curl -s https://raw.githubusercontent.com/thecrypt0hunter/node-installer/master/install-node.sh )`
