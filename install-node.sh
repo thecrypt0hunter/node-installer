@@ -7,7 +7,7 @@ read -p "Which Coin (redstone, x42, impleum, city, stratis, obsidian)? " coin
 read -p "Mainnet (m) or Testnet (t) or Upgrade (u)? " net
 read -p "Which branch (default=master)? " branch
 
-if [${BRANCH} = ""]; then 
+if [${branch} = ""]; then 
 branch="master";
 fi
 
