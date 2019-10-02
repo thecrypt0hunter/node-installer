@@ -1,5 +1,8 @@
 Best using a freshly installed Ubuntu OS (16.04 - 19.04). 
 
-Run the following command as root `sudo su`:
+Run the following command as root:
 
-`bash <( curl -s https://raw.githubusercontent.com/thecrypt0hunter/node-installer/master/install-node.sh )`
+```
+sudo su -
+bash <( curl -s https://raw.githubusercontent.com/thecrypt0hunter/node-installer/master/install-node.sh )
+```
