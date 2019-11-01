@@ -1,5 +1,5 @@
 #!/bin/bash
-# bash <( curl -s https://raw.githubusercontent.com/thecrypt0hunter/node-installer/master/solaris-hot-node.sh)
+# bash <( curl -s https://raw.githubusercontent.com/thecrypt0hunter/node-installer/master/install-solaris-hot-node.sh)
 
 NONE='\033[00m'
 RED='\033[01;31m'
@@ -294,8 +294,8 @@ echo -e "Password  	:" $HotWalletPassword
 echo -e "Passphrase	:" $HotWalletPassphrase
 echo -e "Mnemonic  	:" $HotWalletSecretWords
 echo -e "Hot address     :${RED}" $HotWalletColdStakingHotAddress
+echo 
 echo -e "${RED}IMPORTANT: NEVER SEND COINS TO YOUR HOT ADDRESS - THIS IS FOR COLD STAKING ONLY!!!${NONE}"
-
 echo -e "${NONE}"
 
 ##### Create and secure staking credentials ######
