@@ -1,5 +1,5 @@
 #!/bin/bash
-#bash bash <( curl -s https://raw.githubusercontent.com/thecrypt0hunter/node-installer/master/solaris-hot-node.sh)
+# bash <( curl -s https://raw.githubusercontent.com/thecrypt0hunter/node-installer/master/solaris-hot-node.sh)
 
 NONE='\033[00m'
 RED='\033[01;31m'
@@ -19,7 +19,7 @@ COINAPIPORT=62000
 ## set general variables
 DATE_STAMP="$(date +%y-%m-%d-%s)"
 OS_VER="Ubuntu*"
-COINRUNCMD="sudo dotnet ./Stratis.SolarisD.dll -datadir=/home/${NODE_USER}/.${NODE_USER}node -maxblkmem=2 ${stakeparams}"
+COINRUNCMD="sudo dotnet ./Stratis.SolarisD.dll -datadir=/home/${NODE_USER}/.${NODE_USER}node -maxblkmem=2 \${stakeparams}"
 COINBIN=https://github.com/SolarisPlatform/SolarisBitcoinFullNode/releases/download/v3.0.0.0/solaris-daemon-3.0.0.0-linux64.tar.gz
 COINDAEMON=${NODE_USER}d
 COINSTARTUP=/home/${NODE_USER}/${NODE_USER}d
@@ -149,10 +149,10 @@ function installDependencies() {
             dpkg -i packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
             add-apt-repository universe -y &>> ${SCRIPT_LOGFILE}
             apt-get install apt-transport-https -y &>> ${SCRIPT_LOGFILE}
-            apt-get update -y &>> ${SCRIPT_LOGFILE}
-            apt-get install dotnet-sdk-2.2 -y &>> ${SCRIPT_LOGFILE}
-            echo -e "${NONE}${GREEN}* Done${NONE}";
-        fi
+          echo -e "\#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams='-stake -walletname=${STAKINGNAME} -walletpassword=${STAKINGPASSWORD}'\nfi\ncd $COINDLOC\n$COINRUNCMD" > te -y &>> ${SCRIPT_LOGFILE}
+          echo -e "\#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams='-stake -walletname=${STAKINGNAME} -walletpassword=${STAKINGPASSWORD}'\nfi\ncd $COINDLOC\n$COINRUNCMD" > tel dotnet-sdk-2.2 -y &>> ${SCRIPT_LOGFILE}
+          echo -e "\#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams='-stake -walletname=${STAKINGNAME} -walletpassword=${STAKINGPASSWORD}'\nfi\ncd $COINDLOC\n$COINRUNCMD" > teE}${GREEN}* Done${NONE}";
+        fiecho -e "\#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams='-stake -walletname=${STAKINGNAME} -walletpassword=${STAKINGPASSWORD}'\nfi\ncd $COINDLOC\n$COINRUNCMD" > te
         if [[ "${VERSION_ID}" = "19.04" ]]; then
             wget -q https://packages.microsoft.com/config/ubuntu/19.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
             dpkg -i packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
@@ -184,7 +184,7 @@ function installWallet() {
     echo
     echo -e "* Installing wallet. Please wait..."
     cd /home/${NODE_USER}/
-    echo -e "#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams=-stake -walletname=${STAKINGNAME} -walletpassword=${STAKINGPASSWORD}\nfi\ncd $COINDLOC\n$COINRUNCMD" > ${COINSTARTUP}
+    echo -e "#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams=-stake -walletname=\${STAKINGNAME} -walletpassword=\${STAKINGPASSWORD}\nfi\ncd $COINDLOC\n$COINRUNCMD" > ${COINSTARTUP}
     echo -e "[Unit]\nDescription=${COINDAEMON}\nAfter=network-online.target\n\n[Service]\nType=simple\nUser=${NODE_USER}\nGroup=${NODE_USER}\nExecStart=${COINSTARTUP}\nRestart=always\nRestartSec=5\nPrivateTmp=true\nTimeoutStopSec=60s\nTimeoutStartSec=5s\nStartLimitInterval=120s\nStartLimitBurst=15\n\n[Install]\nWantedBy=multi-user.target" >${COINSERVICENAME}.service
     chown -R ${NODE_USER}:${NODE_USER} ${COINSERVICELOC} &>> ${SCRIPT_LOGFILE}
     mv $COINSERVICENAME.service ${COINSERVICELOC} &>> ${SCRIPT_LOGFILE}
