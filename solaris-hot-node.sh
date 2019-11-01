@@ -146,13 +146,13 @@ function installDependencies() {
         fi
         if [[ "${VERSION_ID}" = "18.04" ]]; then
             wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
-            dpkg -i packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
-            add-apt-repository universe -y &>> ${SCRIPT_LOGFILE}
-            apt-get install apt-transport-https -y &>> ${SCRIPT_LOGFILE}
-          echo -e "\#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams='-stake -walletname=${STAKINGNAME} -walletpassword=${STAKINGPASSWORD}'\nfi\ncd $COINDLOC\n$COINRUNCMD" > te -y &>> ${SCRIPT_LOGFILE}
-          echo -e "\#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams='-stake -walletname=${STAKINGNAME} -walletpassword=${STAKINGPASSWORD}'\nfi\ncd $COINDLOC\n$COINRUNCMD" > tel dotnet-sdk-2.2 -y &>> ${SCRIPT_LOGFILE}
-          echo -e "\#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams='-stake -walletname=${STAKINGNAME} -walletpassword=${STAKINGPASSWORD}'\nfi\ncd $COINDLOC\n$COINRUNCMD" > teE}${GREEN}* Done${NONE}";
-        fiecho -e "\#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams='-stake -walletname=${STAKINGNAME} -walletpassword=${STAKINGPASSWORD}'\nfi\ncd $COINDLOC\n$COINRUNCMD" > te
+            sudo dpkg -i packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
+            sudo add-apt-repository universe -y &>> ${SCRIPT_LOGFILE}
+            sudo apt-get install apt-transport-https -y &>> ${SCRIPT_LOGFILE}
+            sudo apt-get update -y &>> ${SCRIPT_LOGFILE}
+            sudo apt-get install dotnet-sdk-2.2 -y &>> ${SCRIPT_LOGFILE}
+            echo -e "${NONE}${GREEN}* Done${NONE}";
+        fi
         if [[ "${VERSION_ID}" = "19.04" ]]; then
             wget -q https://packages.microsoft.com/config/ubuntu/19.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
             dpkg -i packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
