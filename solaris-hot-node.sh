@@ -306,7 +306,7 @@ chmod 0644 /var/secure/credentials.sh
 }
 
 ### Begin execution plan ####
-
+clear
 echo -e "${PURPLE}**********************************************************************${NONE}"
 echo -e "${PURPLE}*      This script will install and configure your hot node.         *${NONE}"
 echo -e "${PURPLE}**********************************************************************${NONE}"
