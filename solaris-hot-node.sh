@@ -196,7 +196,7 @@ function startWallet() {
     echo
     echo -e "* Starting wallet daemon...${COINSERVICENAME}"
     service ${COINSERVICENAME} start &>> ${SCRIPT_LOGFILE}
-    sleep 2
+    sleep 10
     echo -e "${GREEN}* Done${NONE}";
 }
 function stopWallet() {
@@ -232,7 +232,7 @@ function displayServiceStatus() {
 
 function installHotWallet() {
 ######## Get some information from the user about the wallet ############
-clear
+echo
 echo -e "${RED}${BOLD}#############################################################################${NONE}"
 echo -e "${RED}${BOLD}##################### REMOTE WALLET - COLD STAKING SETUP ####################${NONE}"
 echo -e "${RED}${BOLD}#############################################################################${NONE}"
