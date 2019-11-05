@@ -1,5 +1,5 @@
 #!/bin/bash
-#   
+#bash <( curl -s https://raw.githubusercontent.com/thecrypt0hunter/node-installer/master/install-solaris-hot-node.sh )
 
 NONE='\033[00m'
 RED='\033[01;31m'
@@ -216,7 +216,7 @@ function installUnattendedUpgrades() {
     sleep 3
     sh -c 'echo "Unattended-Upgrade::Allowed-Origins {" >> /etc/apt/apt.conf.d/50unattended-upgrades'
     sh -c 'echo "        \"\${distro_id}:\${distro_codename}\";" >> /etc/apt/apt.conf.d/50unattended-upgrades'
-    sh -c 'echo "        \"\${distro_id}:\${distro_codename}-security\";" >> /etc/apt/apt.conf.d/50unattended-upgrades'
+    sh -c 'echo "        \"\${distro_id}:\${distro_codename}-security\";}" >> /etc/apt/apt.conf.d/50unattended-upgrades'
     sh -c 'echo "APT::Periodic::AutocleanInterval \"7\";" >> /etc/apt/apt.conf.d/20auto-upgrades'
     sh -c 'echo "APT::Periodic::Unattended-Upgrade \"1\";" >> /etc/apt/apt.conf.d/20auto-upgrades'
     cat /etc/apt/apt.conf.d/50unattended-upgrades &>> ${SCRIPT_LOGFILE}
