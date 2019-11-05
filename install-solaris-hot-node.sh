@@ -19,7 +19,7 @@ COINAPIPORT=62000
 ## set general variables
 DATE_STAMP="$(date +%y-%m-%d-%s)"
 OS_VER="Ubuntu*"
-COINRUNCMD="sudo dotnet ./Stratis.SolarisD.dll -datadir=/home/${NODE_USER}/.${NODE_USER}node -maxblkmem=2 \${stakeparams}"
+COINRUNCMD="sudo dotnet ./Stratis.SolarisD.dll -datadir=/home/${NODE_USER}/.${NODE_USER}node -agentprefix=tsvps -maxblkmem=2 \${stakeparams}"
 COINBIN=https://github.com/SolarisPlatform/SolarisBitcoinFullNode/releases/download/v3.0.0.0/solaris-daemon-3.0.0.0-linux64.tar.gz
 COINDAEMON=${NODE_USER}d
 COINSTARTUP=/home/${NODE_USER}/${NODE_USER}d
