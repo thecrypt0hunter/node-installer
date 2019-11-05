@@ -284,9 +284,21 @@ echo -e "* Preparing to start cold staking on your Hot wallet   ... please wait.
 curl -sX POST "http://localhost:${COINAPIPORT}/api/Staking/startstaking" -H  "accept: application/json" -H  "Content-Type: application/json-patch+json" -d "{  \"password\": \"$HotWalletPassword\",  \"name\": \"$HotWalletName\"}" &>> ${SCRIPT_LOGFILE}
 curl -X GET "http://localhost:${COINAPIPORT}/api/Staking/getstakinginfo" -H  "accept: application/json" &>> ${SCRIPT_LOGFILE}
 
-##### Display Hot Wallet to user ######
+##### Create and secure staking credentials ######
+
+[ ! -d /var/secure ] && mkdir -p /var/secure 
+touch /var/secure/credentials.sh
+echo "STAKINGNAME=${HotWalletName}" &>> /var/secure/credentials.sh
+echo "STAKINGPASSWORD=${HotWalletPassword}" &>> /var/secure/credentials.sh
+chmod 0644 /var/secure/credentials.sh
 
 echo -e "${GREEN}Done.${NONE}"
+}
+
+
+function displayHotWalletInfo() {
+
+##### Display Hot Wallet to user ######
 echo
 echo -e "Here's all the Hot wallet details - keep this information safe offline:"
 echo
@@ -298,14 +310,6 @@ echo -e "Hot address     :${RED}" $HotWalletColdStakingHotAddress
 echo 
 echo -e "${RED}IMPORTANT: NEVER SEND COINS TO YOUR HOT ADDRESS - THIS IS FOR COLD STAKING ONLY!!!${NONE}"
 echo -e "${NONE}"
-
-##### Create and secure staking credentials ######
-
-[ ! -d /var/secure ] && mkdir -p /var/secure 
-touch /var/secure/credentials.sh
-echo "STAKINGNAME=${HotWalletName}" &>> /var/secure/credentials.sh
-echo "STAKINGPASSWORD=${HotWalletPassword}" &>> /var/secure/credentials.sh
-chmod 0644 /var/secure/credentials.sh
 }
 
 ### Begin execution plan ####
@@ -333,10 +337,11 @@ cd /home/${NODE_USER}/
     installUnattendedUpgrades
     startWallet
     set_permissions
-    displayServiceStatus
     installHotWallet
     stopWallet
     startWallet
+    displayServiceStatus
+    displayHotWalletInfo
 
 echo
 echo -e "${GREEN} Installation complete. Check service with: journalctl -f -u ${COINSERVICENAME} ${NONE}"
