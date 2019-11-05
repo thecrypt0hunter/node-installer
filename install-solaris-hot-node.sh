@@ -75,7 +75,7 @@ function updateAndUpgrade() {
     echo
     echo "* Running update and upgrade. Please wait..."
     apt-get update &>> ${SCRIPT_LOGFILE}
-    DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade &>> ${SCRIPT_LOGFILE}
+    DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" dist-upgrade &>> ${SCRIPT_LOGFILE}
     DEBIAN_FRONTEND=noninteractive apt-get autoremove -y &>> ${SCRIPT_LOGFILE}
     echo -e "${GREEN}* Done${NONE}";
 }
