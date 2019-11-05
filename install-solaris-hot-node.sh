@@ -339,5 +339,6 @@ cd /home/${NODE_USER}/
 
 echo
 echo -e "${GREEN} Installation complete. Check service with: journalctl -f -u ${COINSERVICENAME} ${NONE}"
-echo -e "${GREEN} thecrypt0hunter, trustaking.com(2019)${NONE}"
+echo -e "${GREEN} If you find this service valuable we appreciate any tips, please visit https://donations.trustaking.com ${NONE}"
+echo -e "${GREEN} thecrypt0hunter(2019)${NONE}"
 cd ~
