@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  city: 
+    build: .
+    volumes:
+      - /root/.citychain:/root/.citychain
+    ports:
+      - 4333:4333
+      - 4334:4334
+      - 4335:4335
