@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
 
 ## Compile wallet
-RUN git clone --branch v1.0.21 https://github.com/CityChainFoundation/city-chain.git \
+RUN git clone --branch v1.0.17 https://github.com/CityChainFoundation/city-chain.git \
     && cd city-chain/src/City.Chain \
 	&& dotnet publish -c "release" -r "linux-x64" -v m -o "/root/citynode" 
 
