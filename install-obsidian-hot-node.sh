@@ -20,7 +20,7 @@ COINAPIPORT=47221
 DATE_STAMP="$(date +%y-%m-%d-%s)"
 OS_VER="Ubuntu*"
 COINRUNCMD="sudo dotnet ./Obsidian.OxD.dll -datadir=/home/${NODE_USER}/.${NODE_USER}node -agentprefix=tsvps -maxblkmem=2 \${stakeparams}"
-COINBIN=https://github.com/obsidianproject/ObsidianX/releases/download/v1.0.0.0/obsidianx-daemon-1.0.0.0-linux64.tar.gz
+COINBIN=https://github.com/obsidianproject/ObsidianX/releases/download/v4.0/oxd-linux
 COINDAEMON=${NODE_USER}d
 COINSTARTUP=/home/${NODE_USER}/${NODE_USER}d
 COINDLOC=/home/${NODE_USER}/${NODE_USER}node
