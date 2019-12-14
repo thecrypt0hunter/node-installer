@@ -189,8 +189,8 @@ function compileWallet() {
     dotnet publish -c ${CONF} -r ${ARCH} -v m -o ${COINDLOC} &>> ${SCRIPT_LOGFILE} ### compile & publish code
     # Workaround to install FodyNlogAdapter
     wget -P /home/${NODE_USER}/code https://globalcdn.nuget.org/packages/stratis.fodynlogadapter.3.0.4.1.nupkg &>> ${SCRIPT_LOGFILE}
-    unzip /home/${NODE_USER}/code/stratis.fodynlogadapter.3.0.4.1.nupkg -d /home/${NODE_USER}/code &>> ${SCRIPT_LOGFILE}
-    cp /home/${NODE_USER}/code/lib/netstandard2.0/* ${COINDLOC} &>> ${SCRIPT_LOGFILE}
+    unzip -qq -o /home/${NODE_USER}/code/stratis.fodynlogadapter.3.0.4.1.nupkg -d /home/${NODE_USER}/code &>> ${SCRIPT_LOGFILE}
+    mv /home/${NODE_USER}/code/lib/netstandard2.0/* ${COINDLOC} &>> ${SCRIPT_LOGFILE}
     rm -rf /home/${NODE_USER}/code &>> ${SCRIPT_LOGFILE} 	                       ### Remove source
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }
@@ -199,7 +199,7 @@ function installWallet() {
     echo
     echo -e "* Installing wallet. Please wait..."
     cd /home/${NODE_USER}/
-    echo -e "#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nfi\ncd $COINDLOC\n$COINRUNCMD" > ${COINSTARTUP}
+    echo -e "#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams=\"-stake -walletname=\${STAKINGNAME} -walletpassword=\${STAKINGPASSWORD}\"\nfi\ncd $COINDLOC\n$COINRUNCMD" > ${COINSTARTUP}
     echo -e "[Unit]\nDescription=${COINDAEMON}\nAfter=network-online.target\n\n[Service]\nType=simple\nUser=${NODE_USER}\nGroup=${NODE_USER}\nExecStart=${COINSTARTUP}\nRestart=always\nRestartSec=5\nPrivateTmp=true\nTimeoutStopSec=60s\nTimeoutStartSec=5s\nStartLimitInterval=120s\nStartLimitBurst=15\n\n[Install]\nWantedBy=multi-user.target" >${COINSERVICENAME}.service
     chown -R ${NODE_USER}:${NODE_USER} ${COINSERVICELOC} &>> ${SCRIPT_LOGFILE}
     sudo mv $COINSERVICENAME.service ${COINSERVICELOC} &>> ${SCRIPT_LOGFILE}

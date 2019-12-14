@@ -175,7 +175,7 @@ function compileWallet() {
     mkdir -p ${COINDLOC} &>> ${SCRIPT_LOGFILE}
     cd /home/${NODE_USER}/
     wget --https-only -O coinbin.tar ${COINBIN} &>> ${SCRIPT_LOGFILE}
-    tar xvf coinbin.tar -C ${COINDLOC} &>> ${SCRIPT_LOGFILE}
+    tar -zxf coinbin.tar -C ${COINDLOC} &>> ${SCRIPT_LOGFILE}
     rm coinbin.tar &>> ${SCRIPT_LOGFILE}
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }
@@ -184,7 +184,7 @@ function installWallet() {
     echo
     echo -e "* Installing wallet. Please wait..."
     cd /home/${NODE_USER}/
-    echo -e "#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams=\"-stake -walletname=\${STAKINGNAME} -walletpassword=\${STAKINGPASSWORD}\"\nfi\ncd $COINDLOC\n$COINRUNCMD" > ${COINSTARTUP}
+    echo -e "#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nSTAKEPARAMS=\"-stake -walletname=\${STAKINGNAME} -walletpassword=\${STAKINGPASSWORD}\"\nfi\ncd $COINDLOC\n$COINRUNCMD" > ${COINSTARTUP}
     echo -e "[Unit]\nDescription=${COINDAEMON}\nAfter=network-online.target\n\n[Service]\nType=simple\nUser=${NODE_USER}\nGroup=${NODE_USER}\nExecStart=${COINSTARTUP}\nRestart=always\nRestartSec=5\nPrivateTmp=true\nTimeoutStopSec=60s\nTimeoutStartSec=5s\nStartLimitInterval=120s\nStartLimitBurst=15\n\n[Install]\nWantedBy=multi-user.target" >${COINSERVICENAME}.service
     chown -R ${NODE_USER}:${NODE_USER} ${COINSERVICELOC} &>> ${SCRIPT_LOGFILE}
     mv $COINSERVICENAME.service ${COINSERVICELOC} &>> ${SCRIPT_LOGFILE}
