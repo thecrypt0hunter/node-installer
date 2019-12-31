@@ -299,13 +299,13 @@ function displayHotWalletInfo() {
 
 ##### Display Hot Wallet to user ######
 echo
-echo -e "Here's all the Hot wallet details - keep this information safe offline:"
+echo -e "Here's all the Cold Staking Server details - keep this information safe offline:"
 echo
-echo -e "Name      	:" $HotWalletName
-echo -e "Password  	:" $HotWalletPassword
-echo -e "Passphrase	:" $HotWalletPassphrase
-echo -e "Mnemonic  	:" $HotWalletSecretWords
-echo -e "Hot address     :${RED}" $HotWalletColdStakingHotAddress
+echo -e "Name      	            :" $HotWalletName
+echo -e "Password  	            :" $HotWalletPassword
+echo -e "Passphrase	            :" $HotWalletPassphrase
+echo -e "Mnemonic  	            :" $HotWalletSecretWords
+echo -e "Cold staking address   :${RED}" $HotWalletColdStakingHotAddress
 echo 
 echo -e "${RED}IMPORTANT: NEVER SEND COINS TO YOUR HOT ADDRESS - THIS IS FOR COLD STAKING ONLY!!!${NONE}"
 echo -e "${NONE}"
@@ -314,7 +314,7 @@ echo -e "${NONE}"
 ### Begin execution plan ####
 clear
 echo -e "${PURPLE}**********************************************************************${NONE}"
-echo -e "${PURPLE}*      This script will install and configure your hot node.         *${NONE}"
+echo -e "${PURPLE}*  This script will install and configure your cold staking node.    *${NONE}"
 echo -e "${PURPLE}**********************************************************************${NONE}"
 echo -e "${BOLD}"
 
