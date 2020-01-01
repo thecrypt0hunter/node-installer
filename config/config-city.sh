@@ -2,7 +2,7 @@ function setMainVars() {
 ## set network dependent variables
 NETWORK=""
 NODE_USER=${FORK}${NETWORK}
-COINCORE=/home/${NODE_USER}/.${FORK}node/${FORK}/CityMain
+COINCORE=/home/${NODE_USER}/.${FORK}chain/${FORK}/CityMain
 COINPORT=4333
 COINRPCPORT=4334
 COINAPIPORT=4335
@@ -12,7 +12,7 @@ function setTestVars() {
 ## set network dependent variables
 NETWORK="-testnet"
 NODE_USER=${FORK}${NETWORK}
-COINCORE=/home/${NODE_USER}/.${FORK}node/${FORK}/CityTest
+COINCORE=/home/${NODE_USER}/.${FORK}chain/${FORK}/CityTest
 COINPORT=24333
 COINRPCPORT=24334
 COINAPIPORT=24335
