@@ -19,7 +19,7 @@ COINAPIPORT=4335
 ## set general variables
 DATE_STAMP="$(date +%y-%m-%d-%s)"
 OS_VER="Ubuntu*"
-COINRUNCMD="sudo dotnet ./City.Chain.dll -datadir=/home/${NODE_USER}/.${FORK}chain -agentprefix=tsvps -maxblkmem=2 \${stakeparams}"
+COINRUNCMD="sudo dotnet ./City.Chain.dll -datadir=/home/${NODE_USER}/.${NODE_USER}chain -agentprefix=tsvps -maxblkmem=2 \${stakeparams}"
 COINBIN=https://github.com/CityChainFoundation/city-chain/releases/download/v1.0.21/City.Chain-1.0.21-linux-x64.tar.gz
 COINDAEMON=${NODE_USER}d
 COINSTARTUP=/home/${NODE_USER}/${NODE_USER}d
@@ -46,8 +46,10 @@ function create_user() {
         echo "user exists already, do nothing"
     else
         echo -e "${NONE}${GREEN}* Adding new system user ${NODE_USER}${NONE}"
-        adduser --disabled-password --gecos "" ${NODE_USER} &>> ${SCRIPT_LOGFILE}
+        adduser --disabled-password --gecos "" ${NODE_USER}&>> ${SCRIPT_LOGFILE}
+        usermod -aG sudo ${NODE_USER} &>> ${SCRIPT_LOGFILE}
         echo -e "${NODE_USER} ALL=(ALL) NOPASSWD:ALL" &>> /etc/sudoers
+
     fi
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }
