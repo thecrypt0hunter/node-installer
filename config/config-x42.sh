@@ -22,7 +22,7 @@ function setGeneralVars() {
 ## set general variables
 COINRUNCMD="sudo dotnet ./x42.x42D.dll ${NETWORK} -datadir=/home/${NODE_USER}/.${FORK}node -maxblkmem=2 \${stakeparams}"
 COINGITHUB=https://github.com/x42protocol/x42-BlockCore.git
-COINDSRC=/home/${NODE_USER}/code/X42-FullNode/src/x42.x42D
+COINDSRC=/home/${NODE_USER}/code/X42-BlockCore/src/x42.x42D
 CONF=release
 COINDAEMON=${FORK}d
 COINCONFIG=${FORK}.conf
