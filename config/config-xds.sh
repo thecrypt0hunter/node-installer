@@ -2,27 +2,27 @@ function setMainVars() {
 ## set network dependent variables
 NETWORK=""
 NODE_USER=${FORK}${NETWORK}
-COINCORE=/home/${NODE_USER}/.${FORK}node/${FORK}/ObsidianXMain
+COINCORE=/home/${NODE_USER}/.fullnoderoot/${FORK}/MainNet
 COINPORT=46660
-COINRPCPORT=46661
-COINAPIPORT=47221
+COINRPCPORT=48333
+COINAPIPORT=48334
 }
 
 function setTestVars() {
 ## set network dependent variables
 NETWORK="-testnet"
 NODE_USER=${FORK}${NETWORK}
-COINCORE=/home/${NODE_USER}/.${FORK}node/${FORK}/ObsidianXTest
+COINCORE=/home/${NODE_USER}/.fullnoderoot/${FORK}/TestNet
 COINPORT=46660
-COINRPCPORT=46661
-COINAPIPORT=47221
+COINRPCPORT=48333
+COINAPIPORT=48334
 }
 
 function setGeneralVars() {
 ## set general variables
-COINRUNCMD="sudo dotnet Obsidian.OxD.dll ${NETWORK} -datadir=/home/${NODE_USER}/.${FORK}chain -maxblkmem=2 -hdwallet \${stakeparams}"
-COINGITHUB=https://github.com/obsidianproject/Obsidian-StratisNode.git
-COINDSRC=/home/${NODE_USER}/code/src/Obsidian.OxD
+COINRUNCMD="dotnet Daemon.dll ${NETWORK} -datadir=/home/${NODE_USER}/.fullnoderoot -maxblkmem=2 \${stakeparams}"
+COINGITHUB=https://github.com/sonofsatoshi2020/xds.git
+COINDSRC=/home/${NODE_USER}/code/src/daemon
 CONF=release
 COINDAEMON=${FORK}d
 COINCONFIG=${FORK}.conf
