@@ -3,7 +3,7 @@
 #bash <( curl -s https://raw.githubusercontent.com/thecrypt0hunter/node-installer/master/install-node.sh )
 # =====================================================
 
-read -p "Which Coin (redstone, x42, impleum, city, stratis, obsidian)? " coin
+read -p "Which Coin (redstone, x42, impleum, city, stratis, xds)? " coin
 read -p "Mainnet (m) or Testnet (t) or Upgrade (u)? " net
 read -p "Which branch (default=master)? " branch
 
