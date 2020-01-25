@@ -12,7 +12,7 @@ function setVars() {
 ## set network dependent variables
 NODE_USER=xds
 COINCORE=/home/${NODE_USER}/.fullnoderoot/${FORK}/MainNet
-COINPORT=46660
+COINPORT=38333
 COINRPCPORT=48333
 COINAPIPORT=48334
 
