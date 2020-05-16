@@ -11,7 +11,6 @@ UNDERLINE='\033[4m'
 function setVars() {
 ## set network dependent variables
 NODE_USER=solaris
-COINCORE=/home/${NODE_USER}/.${NODE_USER}node/${NODE_USER}platform/SolarisMain
 COINPORT=60000
 COINRPCPORT=61000
 COINAPIPORT=62000
@@ -19,7 +18,7 @@ COINAPIPORT=62000
 ## set general variables
 DATE_STAMP="$(date +%y-%m-%d-%s)"
 OS_VER="Ubuntu*"
-COINRUNCMD="sudo dotnet ./Stratis.SolarisD.dll -datadir=/home/${NODE_USER}/.${NODE_USER}node -agentprefix=tsvps -maxblkmem=2 \${stakeparams}"
+COINRUNCMD="dotnet ./Stratis.SolarisD.dll -datadir=/home/${NODE_USER}/.${NODE_USER}node -agentprefix=tsvps -maxblkmem=2 \${stakeparams}"
 COINBIN=https://github.com/SolarisPlatform/SolarisBitcoinFullNode/releases/download/v3.0.0.0/solaris-daemon-3.0.0.0-linux64.tar.gz
 COINDAEMON=${NODE_USER}d
 COINSTARTUP=/home/${NODE_USER}/${NODE_USER}d
@@ -54,9 +53,9 @@ function create_user() {
 }
 
 function set_permissions() {
-    chown -R ${NODE_USER}:${NODE_USER} ${COINCORE} ${COINSTARTUP} ${COINDLOC} &>> ${SCRIPT_LOGFILE}
+    chown -R ${NODE_USER}:${NODE_USER} ${COINSTARTUP} ${COINDLOC} &>> ${SCRIPT_LOGFILE}
     # make group permissions same as user, so vps-user can be added to node group
-    chmod -R g=u ${COINCORE} ${COINSTARTUP} ${COINDLOC} ${COINSERVICELOC} &>> ${SCRIPT_LOGFILE}
+    chmod -R g=u ${COINSTARTUP} ${COINDLOC} &>> ${SCRIPT_LOGFILE}
 }
 
 function checkOSVersion() {
@@ -198,7 +197,6 @@ function installWallet() {
     cd /home/${NODE_USER}/
     echo -e "#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nexport LANG=en_US.UTF-8\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams=\"-stake -walletname=\${STAKINGNAME} -walletpassword=\${STAKINGPASSWORD}\"\nfi\ncd $COINDLOC\n$COINRUNCMD" > ${COINSTARTUP}
     echo -e "[Unit]\nDescription=${COINDAEMON}\nAfter=network-online.target\n\n[Service]\nType=simple\nUser=${NODE_USER}\nGroup=${NODE_USER}\nExecStart=${COINSTARTUP}\nRestart=always\nRestartSec=5\nPrivateTmp=true\nTimeoutStopSec=60s\nTimeoutStartSec=5s\nStartLimitInterval=120s\nStartLimitBurst=15\n\n[Install]\nWantedBy=multi-user.target" >${COINSERVICENAME}.service
-    chown -R ${NODE_USER}:${NODE_USER} ${COINSERVICELOC} &>> ${SCRIPT_LOGFILE}
     mv $COINSERVICENAME.service ${COINSERVICELOC} &>> ${SCRIPT_LOGFILE}
     chmod 777 ${COINSTARTUP} &>> ${SCRIPT_LOGFILE}
     systemctl --system daemon-reload &>> ${SCRIPT_LOGFILE}
