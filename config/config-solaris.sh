@@ -2,7 +2,6 @@ function setMainVars() {
 ## set network dependent variables
 NETWORK=""
 NODE_USER=${FORK}${NETWORK}
-COINCORE=/home/${NODE_USER}/.${FORK}node/${FORK}platform/SolarisMain
 COINPORT=60000
 COINRPCPORT=61000
 COINAPIPORT=62000
@@ -12,7 +11,6 @@ function setTestVars() {
 ## set network dependent variables
 NETWORK="-testnet"
 NODE_USER=${FORK}${NETWORK}
-COINCORE=/home/${NODE_USER}/.${FORK}node/${FORK}platform/SolarisTest
 COINPORT=60000
 COINRPCPORT=61000
 COINAPIPORT=62000
@@ -20,7 +18,7 @@ COINAPIPORT=62000
 
 function setGeneralVars() {
 ## set general variables
-COINRUNCMD="sudo dotnet ./Stratis.SolarisD.dll ${NETWORK} -datadir=/home/${NODE_USER}/.${FORK}node -maxblkmem=2 \${stakeparams}"
+COINRUNCMD="dotnet ./Stratis.SolarisD.dll ${NETWORK} -datadir=/home/${NODE_USER}/.${FORK}node -maxblkmem=2 \${stakeparams}"
 COINGITHUB=https://github.com/SolarisPlatform/SolarisBitcoinFullNode.git
 COINDSRC=/home/${NODE_USER}/code/src/Stratis.SolarisD
 CONF=release
