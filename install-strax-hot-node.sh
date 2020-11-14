@@ -199,7 +199,6 @@ function compileWallet() {
     cd /home/${NODE_USER}/
     git clone ${COINGITHUB} code &>> ${SCRIPT_LOGFILE}
     cd /home/${NODE_USER}/code
-    git submodule update --init --recursive &>> ${SCRIPT_LOGFILE}
     cd ${COINDSRC}
     dotnet publish -c ${CONF} -r ${ARCH} -v m -o ${COINDLOC} &>> ${SCRIPT_LOGFILE} ### compile & publish code
     rm -rf /home/${NODE_USER}/code &>> ${SCRIPT_LOGFILE} 	                       ### Remove source
