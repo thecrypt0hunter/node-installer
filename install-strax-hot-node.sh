@@ -18,6 +18,7 @@ COINAPIPORT=17103
 ## set general variables
 DATE_STAMP="$(date +%y-%m-%d-%s)"
 OS_VER="Ubuntu*"
+ARCH="linux-x64"
 COINRUNCMD="dotnet ./Stratis.StraxD.dll -agentprefix=trustaking -datadir=/home/${NODE_USER}/.${NODE_USER}node -maxblkmem=2 \${stakeparams} \${rpcparams}"
 COINGITHUB=https://github.com/stratisproject/StratisFullNode.git
 COINDSRC=/home/${NODE_USER}/code/src/Stratis.StraxD
@@ -199,6 +200,7 @@ function compileWallet() {
     cd /home/${NODE_USER}/
     git clone ${COINGITHUB} code &>> ${SCRIPT_LOGFILE}
     cd /home/${NODE_USER}/code
+    git submodule update --init --recursive &>> ${SCRIPT_LOGFILE}
     cd ${COINDSRC}
     dotnet publish -c ${CONF} -r ${ARCH} -v m -o ${COINDLOC} &>> ${SCRIPT_LOGFILE} ### compile & publish code
     rm -rf /home/${NODE_USER}/code &>> ${SCRIPT_LOGFILE} 	                       ### Remove source
