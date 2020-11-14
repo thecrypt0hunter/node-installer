@@ -19,6 +19,7 @@ COINAPIPORT=17103
 DATE_STAMP="$(date +%y-%m-%d-%s)"
 OS_VER="Ubuntu*"
 ARCH="linux-x64"
+DOTNETVER="3.1=3.1.102-1"
 COINRUNCMD="dotnet ./Stratis.StraxD.dll -agentprefix=trustaking -datadir=/home/${NODE_USER}/.${NODE_USER}node -maxblkmem=2 \${stakeparams} \${rpcparams}"
 COINGITHUB=https://github.com/stratisproject/StratisFullNode.git
 COINDSRC=/home/${NODE_USER}/code/src/Stratis.StraxD
