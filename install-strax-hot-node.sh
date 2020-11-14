@@ -197,7 +197,7 @@ function compileWallet() {
         mkdir /home/${NODE_USER} 
     fi
     cd /home/${NODE_USER}/
-    git clone --recurse-submodules --branch=${BRANCH} ${COINGITHUB} code &>> ${SCRIPT_LOGFILE}
+    git clone --recurse-submodules ${COINGITHUB} code &>> ${SCRIPT_LOGFILE}
     cd /home/${NODE_USER}/code
     git submodule update --init --recursive &>> ${SCRIPT_LOGFILE}
     cd ${COINDSRC}
