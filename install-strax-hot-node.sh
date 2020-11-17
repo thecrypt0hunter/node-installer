@@ -176,9 +176,7 @@ function compileWallet() {
     git clone ${COINGITHUB} code &>> ${SCRIPT_LOGFILE}
     cd /home/${NODE_USER}/code
     # Install the correct version of dotnet based on global.json not --version ${DOTNETVER} installs SDK not --runtime dotnet
-    curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --install-dir /home/${NODE_USER}/straxnode --jsonfile /home/${NODE_USER}/code/src/global.json --verbose &>> ${SCRIPT_LOGFILE}
-    export DOTNET_ROOT=$HOME/.dotnet
-    export PATH=$PATH:$HOME/.dotnet
+    curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --install-dir /home/${NODE_USER}/.dotnet --jsonfile /home/${NODE_USER}/code/src/global.json --verbose &>> ${SCRIPT_LOGFILE}
     cd ${COINDSRC}
     dotnet publish -c ${CONF} -r ${ARCH} -v m -o ${COINDLOC} &>> ${SCRIPT_LOGFILE} ### compile & publish code
     rm -rf /home/${NODE_USER}/code &>> ${SCRIPT_LOGFILE} 	                       ### Remove source
@@ -189,7 +187,7 @@ function installWallet() {
     echo
     echo -e "* Installing wallet. Please wait..."
     cd /home/${NODE_USER}/
-    echo -e "#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nexport LANG=en_US.UTF-8\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams=\"-stake -walletname=\${STAKINGNAME} -walletpassword=\${STAKINGPASSWORD}\"\nfi\ncd $COINDLOC\n$COINRUNCMD" > ${COINSTARTUP}
+    echo -e "#!/bin/bash\nexport DOTNET_CLI_TELEMETRY_OPTOUT=1\nexport DOTNET_ROOT=/home/${NODE_USER}/.dotnet\nexport PATH=$PATH:/home/${NODE_USER}/.dotnet\nexport LANG=en_US.UTF-8\nif [ -f /var/secure/credentials.sh ]; then\nsource /var/secure/credentials.sh\nstakeparams=\"-stake -walletname=\${STAKINGNAME} -walletpassword=\${STAKINGPASSWORD}\"\nfi\ncd $COINDLOC\n$COINRUNCMD" > ${COINSTARTUP}
     echo -e "[Unit]\nDescription=${COINDAEMON}\nAfter=network-online.target\n\n[Service]\nType=simple\nUser=${NODE_USER}\nGroup=${NODE_USER}\nExecStart=${COINSTARTUP}\nRestart=always\nRestartSec=5\nPrivateTmp=true\nTimeoutStopSec=60s\nTimeoutStartSec=5s\nStartLimitInterval=120s\nStartLimitBurst=15\n\n[Install]\nWantedBy=multi-user.target" >${COINSERVICENAME}.service
     mv $COINSERVICENAME.service ${COINSERVICELOC} &>> ${SCRIPT_LOGFILE}
     chmod 777 ${COINSTARTUP} &>> ${SCRIPT_LOGFILE}
