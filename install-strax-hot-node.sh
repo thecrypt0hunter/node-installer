@@ -176,7 +176,7 @@ function compileWallet() {
     git clone ${COINGITHUB} code &>> ${SCRIPT_LOGFILE}
     cd /home/${NODE_USER}/code
     # Install the correct version of dotnet based on global.json not --version ${DOTNETVER} installs SDK not --runtime dotnet
-    curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --jsonfile /home/${NODE_USER}/code/src/global.json --verbose &>> ${SCRIPT_LOGFILE}
+    curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --install-dir /home/${NODE_USER}/straxnode --jsonfile /home/${NODE_USER}/code/src/global.json --verbose &>> ${SCRIPT_LOGFILE}
     export DOTNET_ROOT=$HOME/.dotnet
     export PATH=$PATH:$HOME/.dotnet
     cd ${COINDSRC}
