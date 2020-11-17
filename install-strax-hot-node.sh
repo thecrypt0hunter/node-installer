@@ -137,18 +137,17 @@ function installDependencies() {
     echo
     echo -e "* Installing dependencies. Please wait..."
     timedatectl set-ntp no &>> ${SCRIPT_LOGFILE}
-    apt-get install git ntp nano wget curl software-properties-common -y &>> ${SCRIPT_LOGFILE}
-    apt-get install libc6 libgcc1 libgssapi-krb5-2 libstdc++6 zlib1g
+    apt-get install git ntp nano wget curl software-properties-common libc6 libgcc1 libgssapi-krb5-2 libstdc++6 zlib1g -qy &>> ${SCRIPT_LOGFILE}
     if [[ -r /etc/os-release ]]; then
          . /etc/os-release
          if [[ "${VERSION_ID}" = "16.04" ]]; then
-            apt-get install libicu55 libssl1.0.0
+            apt-get install libicu55 libssl1.0.0 -qy &>> ${SCRIPT_LOGFILE}
          fi
          if [[ "${VERSION_ID}" = "18.04" ]]; then
-            apt-get install libicu60 libssl1.1
+            apt-get install libicu60 libssl1.1 -qy &>> ${SCRIPT_LOGFILE}
          fi
          if [[ "${VERSION_ID}" = "20.04" ]]; then
-            apt-get install libicu66 libssl1.1
+            apt-get install libicu66 libssl1.1 -qy &>> ${SCRIPT_LOGFILE}
          fi
          else
          echo -e "${NONE}${RED}* Version: ${VERSION_ID} not supported.${NONE}";
@@ -178,6 +177,8 @@ function compileWallet() {
     cd /home/${NODE_USER}/code
     # Install the correct version of dotnet based on global.json not --version ${DOTNETVER} installs SDK not --runtime dotnet
     curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --jsonfile /home/${NODE_USER}/code/src/global.json --verbose &>> ${SCRIPT_LOGFILE}
+    export DOTNET_ROOT=$HOME/.dotnet
+    export PATH=$PATH:$HOME/.dotnet
     cd ${COINDSRC}
     dotnet publish -c ${CONF} -r ${ARCH} -v m -o ${COINDLOC} &>> ${SCRIPT_LOGFILE} ### compile & publish code
     rm -rf /home/${NODE_USER}/code &>> ${SCRIPT_LOGFILE} 	                       ### Remove source
