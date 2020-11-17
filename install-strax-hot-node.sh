@@ -19,7 +19,7 @@ COINAPIPORT=17103
 DATE_STAMP="$(date +%y-%m-%d-%s)"
 OS_VER="Ubuntu*"
 ARCH="linux-x64"
-DOTNETVER="3.1=3.1.102-1"
+DOTNETVER="3.1.102"
 COINRUNCMD="dotnet ./Stratis.StraxD.dll -agentprefix=trustaking -datadir=/home/${NODE_USER}/.${NODE_USER}node -maxblkmem=2 \${stakeparams} \${rpcparams}"
 COINGITHUB=https://github.com/stratisproject/StratisFullNode.git
 COINDSRC=/home/${NODE_USER}/code/src/Stratis.StraxD
@@ -138,45 +138,20 @@ function installDependencies() {
     echo -e "* Installing dependencies. Please wait..."
     timedatectl set-ntp no &>> ${SCRIPT_LOGFILE}
     apt-get install git ntp nano wget curl software-properties-common -y &>> ${SCRIPT_LOGFILE}
+    apt-get install libc6 libgcc1 libgssapi-krb5-2 libstdc++6 zlib1g
     if [[ -r /etc/os-release ]]; then
-        . /etc/os-release
-        if [[ "${VERSION_ID}" = "16.04" ]]; then
-            wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
-            dpkg -i packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
-            apt-get install apt-transport-https -y &>> ${SCRIPT_LOGFILE}
-            apt-get update -y &>> ${SCRIPT_LOGFILE}
-            apt-get install -y dotnet-sdk-${DOTNETVER} --allow-downgrades &>> ${SCRIPT_LOGFILE}
-            echo -e "${NONE}${GREEN}* Done${NONE}";
-        fi
-        if [[ "${VERSION_ID}" = "18.04" ]]; then
-            wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
-            dpkg -i packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
-            add-apt-repository universe -y &>> ${SCRIPT_LOGFILE}
-            apt-get install apt-transport-https -y &>> ${SCRIPT_LOGFILE}
-            apt-get update -y &>> ${SCRIPT_LOGFILE}
-            apt-get install -y dotnet-sdk-${DOTNETVER} --allow-downgrades &>> ${SCRIPT_LOGFILE}
-            echo -e "${NONE}${GREEN}* Done${NONE}";
-        fi
-        if [[ "${VERSION_ID}" = "19.04" ]]; then
-            wget -q https://packages.microsoft.com/config/ubuntu/19.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
-            dpkg -i packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
-            apt-get install apt-transport-https -y &>> ${SCRIPT_LOGFILE}
-            apt-get update -y &>> ${SCRIPT_LOGFILE}
-            apt-get install -y  dotnet-sdk-${DOTNETVER} --allow-downgrades &>> ${SCRIPT_LOGFILE}
-            wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl1.0/libssl1.0.0_1.0.2n-1ubuntu6_amd64.deb &>> ${SCRIPT_LOGFILE}
-            dpkg -i libssl1.0.0_1.0.2n-1ubuntu6_amd64.deb &>> ${SCRIPT_LOGFILE}
-            echo -e "${NONE}${GREEN}* Done${NONE}";
-        fi
-        if [[ "${VERSION_ID}" = "20.04" ]]; then
-            wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
-            dpkg -i packages-microsoft-prod.deb &>> ${SCRIPT_LOGFILE}
-            apt-get install apt-transport-https -y &>> ${SCRIPT_LOGFILE}
-            apt-get update -y &>> ${SCRIPT_LOGFILE}
-            apt-get install -y dotnet-sdk-${DOTNETVER} --allow-downgrades &>> ${SCRIPT_LOGFILE}
-            echo -e "${NONE}${GREEN}* Done${NONE}";
-        fi
-        else
-        echo -e "${NONE}${RED}* Version: ${VERSION_ID} not supported.${NONE}";
+         . /etc/os-release
+         if [[ "${VERSION_ID}" = "16.04" ]]; then
+            apt-get install libicu55 libssl1.0.0
+         fi
+         if [[ "${VERSION_ID}" = "18.04" ]]; then
+            apt-get install libicu60 libssl1.1
+         fi
+         if [[ "${VERSION_ID}" = "20.04" ]]; then
+            apt-get install libicu66 libssl1.1
+         fi
+         else
+         echo -e "${NONE}${RED}* Version: ${VERSION_ID} not supported.${NONE}";
     fi
 }
 
@@ -201,7 +176,8 @@ function compileWallet() {
     cd /home/${NODE_USER}/
     git clone ${COINGITHUB} code &>> ${SCRIPT_LOGFILE}
     cd /home/${NODE_USER}/code
-    git submodule update --init --recursive &>> ${SCRIPT_LOGFILE}
+    # Install the correct version of dotnet based on global.json not --version ${DOTNETVER} installs SDK not --runtime dotnet
+    curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --jsonfile /home/${NODE_USER}/code/src/global.json --verbose &>> ${SCRIPT_LOGFILE}
     cd ${COINDSRC}
     dotnet publish -c ${CONF} -r ${ARCH} -v m -o ${COINDLOC} &>> ${SCRIPT_LOGFILE} ### compile & publish code
     rm -rf /home/${NODE_USER}/code &>> ${SCRIPT_LOGFILE} 	                       ### Remove source
