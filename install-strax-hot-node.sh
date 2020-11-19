@@ -108,7 +108,7 @@ fi
 function installFail2Ban() {
     echo
     echo -e "* Installing fail2ban. Please wait..."
-    apt-get update
+    apt-get update &>> ${SCRIPT_LOGFILE}
     apt-get -y install fail2ban &>> ${SCRIPT_LOGFILE}
     systemctl enable fail2ban &>> ${SCRIPT_LOGFILE}
     systemctl start fail2ban &>> ${SCRIPT_LOGFILE}
@@ -123,7 +123,7 @@ function installFail2Ban() {
 function installFirewall() {
     echo
     echo -e "* Installing UFW. Please wait..."
-    apt-get update
+    apt-get update &>> ${SCRIPT_LOGFILE}
     apt-get -y install ufw &>> ${SCRIPT_LOGFILE}
     ufw allow OpenSSH &>> ${SCRIPT_LOGFILE}
     ufw allow $COINPORT/tcp &>> ${SCRIPT_LOGFILE}
@@ -139,7 +139,7 @@ function installFirewall() {
 function installDependencies() {
     echo
     echo -e "* Installing dependencies. Please wait..."
-    apt-get update
+    apt-get update &>> ${SCRIPT_LOGFILE}
     apt-get install git nano wget curl software-properties-common libc6 libgcc1 libgssapi-krb5-2 libstdc++6 zlib1g -qy &>> ${SCRIPT_LOGFILE}
     timedatectl set-ntp no &>> ${SCRIPT_LOGFILE}
     if [[ -r /etc/os-release ]]; then
@@ -220,7 +220,7 @@ function stopWallet() {
 function installUnattendedUpgrades() {
     echo
     echo "* Installing Unattended Upgrades..."
-    apt-get update
+    apt-get update &>> ${SCRIPT_LOGFILE}
     apt install unattended-upgrades -y &>> ${SCRIPT_LOGFILE}
     sleep 3
     sh -c 'echo "Unattended-Upgrade::Allowed-Origins {" >> /etc/apt/apt.conf.d/50unattended-upgrades'
