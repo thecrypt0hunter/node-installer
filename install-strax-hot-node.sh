@@ -28,6 +28,7 @@ CONF=release
 COINDAEMON=${NODE_USER}d
 COINSTARTUP=/home/${NODE_USER}/${NODE_USER}d
 COINDLOC=/home/${NODE_USER}/${NODE_USER}node
+COINDATALOC=/home/${NODE_USER}/${NODE_USER}node
 COINSERVICELOC=/etc/systemd/system/
 COINSERVICENAME=${COINDAEMON}@${NODE_USER}
 SWAPSIZE="1024" ## =1GB
@@ -107,6 +108,7 @@ fi
 function installFail2Ban() {
     echo
     echo -e "* Installing fail2ban. Please wait..."
+    apt-get update
     apt-get -y install fail2ban &>> ${SCRIPT_LOGFILE}
     systemctl enable fail2ban &>> ${SCRIPT_LOGFILE}
     systemctl start fail2ban &>> ${SCRIPT_LOGFILE}
@@ -121,6 +123,7 @@ function installFail2Ban() {
 function installFirewall() {
     echo
     echo -e "* Installing UFW. Please wait..."
+    apt-get update
     apt-get -y install ufw &>> ${SCRIPT_LOGFILE}
     ufw allow OpenSSH &>> ${SCRIPT_LOGFILE}
     ufw allow $COINPORT/tcp &>> ${SCRIPT_LOGFILE}
@@ -136,8 +139,9 @@ function installFirewall() {
 function installDependencies() {
     echo
     echo -e "* Installing dependencies. Please wait..."
+    apt-get update
+    apt-get install git nano wget curl software-properties-common libc6 libgcc1 libgssapi-krb5-2 libstdc++6 zlib1g -qy &>> ${SCRIPT_LOGFILE}
     timedatectl set-ntp no &>> ${SCRIPT_LOGFILE}
-    apt-get install git ntp nano wget curl software-properties-common libc6 libgcc1 libgssapi-krb5-2 libstdc++6 zlib1g -qy &>> ${SCRIPT_LOGFILE}
     if [[ -r /etc/os-release ]]; then
          . /etc/os-release
          if [[ "${VERSION_ID}" = "16.04" ]]; then
@@ -149,6 +153,7 @@ function installDependencies() {
          if [[ "${VERSION_ID}" = "20.04" ]]; then
             apt-get install libicu66 libssl1.1 -qy &>> ${SCRIPT_LOGFILE}
          fi
+         echo -e "${NONE}${GREEN}* Done${NONE}";
          else
          echo -e "${NONE}${RED}* Version: ${VERSION_ID} not supported.${NONE}";
     fi
@@ -177,8 +182,9 @@ function compileWallet() {
     cd /home/${NODE_USER}/code
     # Install the correct version of dotnet based on global.json not --version ${DOTNETVER} installs SDK not --runtime dotnet
     curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --install-dir /home/${NODE_USER}/.dotnet --jsonfile /home/${NODE_USER}/code/src/global.json --verbose &>> ${SCRIPT_LOGFILE}
+    chown ${NODE_USER}:${NODE_USER} /home/${NODE_USER}/.dotnet
     cd ${COINDSRC}
-    dotnet publish -c ${CONF} -r ${ARCH} -v m -o ${COINDLOC} &>> ${SCRIPT_LOGFILE} ### compile & publish code
+    /home/${NODE_USER}/.dotnet/dotnet publish -c ${CONF} -r ${ARCH} -v m -o ${COINDLOC} &>> ${SCRIPT_LOGFILE} ### compile & publish code
     rm -rf /home/${NODE_USER}/code &>> ${SCRIPT_LOGFILE} 	                       ### Remove source
     echo -e "${NONE}${GREEN}* Done${NONE}";
 }
@@ -214,6 +220,7 @@ function stopWallet() {
 function installUnattendedUpgrades() {
     echo
     echo "* Installing Unattended Upgrades..."
+    apt-get update
     apt install unattended-upgrades -y &>> ${SCRIPT_LOGFILE}
     sleep 3
     sh -c 'echo "Unattended-Upgrade::Allowed-Origins {" >> /etc/apt/apt.conf.d/50unattended-upgrades'
@@ -338,6 +345,7 @@ cd /home/${NODE_USER}/
     installUnattendedUpgrades
     startWallet
     set_permissions
+    displayServiceStatus
     installHotWallet
     stopWallet
     startWallet
